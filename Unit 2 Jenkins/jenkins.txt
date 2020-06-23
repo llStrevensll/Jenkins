@@ -1,0 +1,115 @@
+Create Job:
+
+opciones:
+* Nueva Tarea - New Item
+
+* Ejecutar con shell  - Execute Shell
+
+echo Hello World
+
+
+java -version
+
+//el contenedor es el que tiene jenkins, ejemplo tiene java, la maquina vitual de CentOS no.
+docker exec -ti jenkins bash
+java -version
+exit
+
+
+* Construir Ahora - Build Now
+* #1
+* Console Output
+
+echo "Current date and time is $(date)"
+
+NAME=Angel
+echo "Hello, $NAME. Current date and time is $(date)"
+
+
+echo "Hello, $NAME. Current date and time is $(date)" > /tmp/info
+cat /tmp/info
+rm -rf /tmp/info
+cat /tmp/info
+
+=================================================================
+vi script.sh //fuera del contenedor
+
+	#!/bin/bash
+
+	echo "Hello, $NAME $LASTNAME"
+
+chmod +x ./script.sh
+
+./script.sh
+
+docker exec -ti jenkins bash
+
+#!/bin/bash
+
+	NAME=$1                                                                          	LASTNAME=$2                                                                                                             
+	echo "Hello, $NAME $LASTNAME"
+
+./script.sh  Angel Rodriguez
+
+
+docker cp script.sh jenkins:/tmp/script.sh
+
+docker exec -ti jenkins bash
+cat /tmp/script.sh
+
+/tmp/script.sh Angel Rodriguez
+
+===============================================================
+Add parameters (interface jenkins)
+
+*Configuration
+
+*Esta ejecucion debe parametrizarse
+
+*Add string parameter
+
+
+
+*Choise parameter //opciones
+
+
+*Boolean Parameter
+
+
+vi script.sh
+
+#!/bin/bash
+
+NAME=$1
+LASTNAME=$2
+SHOW=$3
+
+if [ "$SHOW" = "true" ]; then
+  echo "Hello, $NAME $LASTNAME"
+else
+  echo "If you want to see the name, please mark the show option"
+fi
+
+
+./script.sh 
+
+./script.sh Angel Rodriguez true
+
+
+//Copiar al contenedor
+docker cp script.sh jenkins:/tmp/script.sh
+
+docker exec -it jenkins bash
+
+cat /tmp/script.sh
+
+
+/tmp/script.sh Angel Rodriguez true
+
+
+
+
+
+
+
+

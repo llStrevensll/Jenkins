@@ -1,0 +1,83 @@
+mkdir jenkins
+
+mv jenkins/jenkins-data // cambiar nombre a la carpeta jenkins
+
+ls
+
+cd jenkins-data
+
+vi docker-compose.yml
+
+version: '3'
+services:
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - $PWD/jenkins_home:/var/jenkins_home
+    networks:
+      - net
+networks:
+  net:
+
+mkdir jenkins_home
+
+cat docker-compose.yml
+
+pwd
+
+echo $PWD/jenkins_home
+
+====
+Resumen:
+jenkins_data contiene: docker-compose.yml, jenkins_home
+====
+
+[sjenkins@localhost jenkins-data]$ id
+uid=1000(sjenkins) gid=1000(sjenkins) groups=1000(sjenkins),10(wheel),994(docker) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+
+//Si no tiene el id 1000
+sudo chown 1000:1000 jenkins_home -R
+
+ll
+
+
+
+====
+Levantar jenkins definido en docker-compose
+[sjenkins@localhost jenkins-data]$ docker-compose up -d
+Creating network "jenkins-data_net" with the default driver
+Creating jenkins ... done
+
+docker ps
+
+docker logs -f jenkins //jenkins-> name - defined in docker-compose.yml
+
+//copiar password usar en el navegador -- ip ej: 192.2.2.2 
+// puerto defido ej: 8080
+ip:8080 
+
+
+
+docker-compose stop 
+docker-compose start
+docker-compose restart jenkins
+
+
+
+[sjenkins@localhost jenkins-data]$ docker-compose down
+Stopping jenkins ... done                                                         Removing jenkins ... done                                                        Removing network jenkins-data_net
+
+
+ls jenkins_home/
+
+docker-compose up -d
+
+
+
+
+
+
+

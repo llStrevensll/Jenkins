@@ -1,0 +1,13 @@
+Create a local DNS for Jenkins server
+
+Edit file hosts: 
+C:\Windows\System32\drivers\etc\hosts
+
+add:
+ej: ip-> 192.48.34.34
+
+ip jenkins.local
+
+navegador:
+jenkins.local:8080
+

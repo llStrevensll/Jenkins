@@ -1,0 +1,87 @@
+--Crear nuevo contenedor, Create a new container
+
+mkdir centos7
+
+cd centos7/
+
+vi Dockerfile
+----
+FROM centos
+
+RUN yum -y install openssh-server
+RUN yum install -y passwd
+
+RUN useradd remote_user && \
+   echo "aqui_contraseña" | passwd remote_user --stdin && \
+   mkdir /home/remote_user/.ssh && \
+   chmod 700 /home/remote_user/.ssh
+---
+
+ssh-keygen -f remote-key
+
+
+enter
+enter
+
+ll
+
+//usar public_key
+cat remote-key.pub
+
+vi Dockerfile
+---
+FROM centos
+
+RUN yum -y install openssh-server
+RUN yum install -y passwd
+
+RUN useradd remote_user && \
+    echo "cuenta123" | passwd remote_user --stdin && \
+    mkdir /home/remote_user/.ssh && \
+    chmod 700 /home/remote_user/.ssh
+
+COPY remote-key.pub /home/remote_user/.ssh/authorized_keys
+
+RUN chown remote_user:remote_user -R /home/remote_user/.ssh/ && \
+    chmod 600 /home/remote_user/.ssh/authorized_keys
+
+CMD /usr/sbin/sshd -D
+---
+
+cd ..
+
+ll
+
+vi docker-compose.yml
+--
+#Add service remote_host
+
+version: '3'
+services:
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - "$PWD/jenkins_home:/var/jenkins_home"
+    networks:
+      - net
+  remote_host:                   
+    container_name: remote-host
+    image: remote-host
+    build:
+      context: centos7
+    networks:
+      - net
+
+networks:
+  net:
+
+--
+
+docker-compose build
+
+
+docker images //debe verse la imagen de remote-host
+
