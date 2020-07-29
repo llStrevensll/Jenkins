@@ -127,3 +127,41 @@ pipeline {
     }
 }
 // sh 'echo I am fine'
+
+============
+pipeline {
+    agent any
+    stages {
+        stage('SCM') {
+            steps {
+                //git 'https://github.com/llStrevensll/ProjectTestDevOps1',
+                //git branch: 'desarrollo'
+                git branch: 'desarrollo', credentialsId: '3cc0e838-71f9-4069-85ac-bb4684cc580b', url: "git@github.com:llStrevensll/ProjectTestDevOps1.git"
+                
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'SonarQube========================'
+                script {
+                    def scannerHome = tool 'SonarScannerJenkins-4.4.0';
+                    withSonarQubeEnv("Sonar8.4.1") {
+                        sh 'mvn clean package sonar:sonar'
+                        //bat 'C:/sonar-scanner-4.4.0.2170-windows/bin/sonar-scanner.bat -X'
+                        //bat 'C:/Sonar/sonar-scanner-4.4.0.2170-windows/bin/sonar-scanner.bat -X'
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+            }
+        }
+    }
+}
